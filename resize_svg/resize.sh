@@ -3,7 +3,7 @@
 H=300
 W=300
 #prefix
-PR=""
+PR="resized"
 #default dpi is 90
 DPI=90
 #pt to px
@@ -12,10 +12,9 @@ xW=$(((W*72)/DPI));
 
 
 
-
 function Go {
 	a="`date '+%F-%H-%M-%S'`"
-	b="resized_$a"
+	b="$PR-$a"
 	mkdir $b
 	c=0
 	for file in $(ls *svg)
@@ -26,10 +25,7 @@ function Go {
 	done
 	echo " $c SVG file has been resized."
 }
-
-
 if [ -a "/usr/bin/rsvg-convert" ]; then
-	
 	Go
 else
 	sudo apt-get install  librsvg2-bin
