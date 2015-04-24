@@ -20,7 +20,7 @@ function Go {
 	for file in $(ls *svg)
 	do
 		name=${file%%.svg}
-		rsvg-convert $name.svg -o $b/$name$PR.svg -f svg -w $xW -h $xH
+		rsvg-convert $name.svg -o $b/$name.svg -f svg -w $xW -h $xH
 		c=$((c+1))
 	done
 	echo " $c SVG file has been resized."
