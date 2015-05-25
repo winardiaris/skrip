@@ -1,3 +1,3 @@
 # skrip untuk zsync jahitan blankon tambora
 
-contoh: ./zsync.sh i386
+contoh: ./coi.sh i386
