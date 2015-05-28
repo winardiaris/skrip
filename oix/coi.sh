@@ -1,7 +1,27 @@
 export archi="$1"
+export opsi="$2"
 
-echo "menghapus berkas lama .............. "
-rm -rf *sum*
+function salin {
+  if [ ! -d "backup" ]; then
+    mkdir "backup"
+  fi
+ 
+  a="`date '+%F-%H-%M-%S'`"
+  b="backup/$archi-$a"
+  mkdir "$b"
+ 
+  echo "membackup berkas lama .........."
+  cp -rf *$archi*.iso "$b/"
+}
+
+case $opsi in
+   -b)
+       salin;;
+esac
+
+
+echo "memulai zsync .............. "
+rm -rf *$archi*sum*
 zsync "http://cdimage.blankonlinux.or.id/blankon/livedvd-harian/current/tambora-desktop-$archi.iso.zsync"
 wget "http://cdimage.blankonlinux.or.id/blankon/livedvd-harian/current/tambora-desktop-$archi.iso.md5sum"
 wget "http://cdimage.blankonlinux.or.id/blankon/livedvd-harian/current/tambora-desktop-$archi.iso.sha1sum"
