@@ -1,0 +1,33 @@
+#!/bin/bash
+export aa="$1"
+export bb="$2"
+
+pwd=$('pwd')
+cd $pwd
+echo "active directory:" $pwd
+
+function xfile {
+for A in $(find . -type f); 
+	do 
+		rename "s/$aa/$bb/" $A
+	done
+}
+#find . -depth -type d -name $aa -exec sh -c 'mv "${0}" "${0%/$aa}/$bb"' {} \;
+
+function xdir {
+	AWAL=0
+	for I in $(find . -type d);
+	do
+		JUM=`echo $I | awk -F "/" '{print NF-1}'`
+		if [[ $JUM > $AWAL ]]; then AWAL=$JUM; fi;
+	done
+		
+	for I in `seq 1 $AWAL`;
+	do
+		for B in $(find . -maxdepth $I -type d ); do rename "s/$aa/$bb/" $B ; done
+		#echo $I
+	done
+}
+
+
+xdir && xfile

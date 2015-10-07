@@ -1,0 +1,10 @@
+#!/bin/bash
+export aa="$1"
+export bb="$2"
+pwd=$('pwd')
+cd $pwd
+for A in $(find . -type f);
+	do 
+		sed -i "s/${aa}/${bb}/g" $A
+	done
+
