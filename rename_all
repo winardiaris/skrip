@@ -9,7 +9,7 @@ echo "active directory:" $pwd
 function xfile {
 for A in $(find . -type f); 
 	do 
-		rename "s/$aa/$bb/" $A
+		rename "s/$aa/$bb/g" $A
 	done
 }
 #find . -depth -type d -name $aa -exec sh -c 'mv "${0}" "${0%/$aa}/$bb"' {} \;
@@ -28,6 +28,5 @@ function xdir {
 		#echo $I
 	done
 }
-
 
 xdir && xfile
