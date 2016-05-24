@@ -1,17 +1,30 @@
 #!/bin/bash
+#HOWTO USE: ./skrip.sh SOURCEDIR DESTDIR ALLOWFILETYPE
+#ALLOWFILETYPE : zip,deb,sh,bin
+
 export DIRSUMBER="$1"
 export DIRTUJUAN="$2"
-ARR_FILETYPE=()
-ARR_LASTUPDATEYEAR=()
+export ALLOWFILETYPE="$3"
+
 start=$(date +%s.%N)
+
+
+function EXEC(){
+	mkdir -p $DIRECTORY
+	cp -u -v $BERKAS $DIRECTORY
+	#masukan data indexing
+	echo \"$AUTHOR\",\"$CATEGORY\",\"$DIRECTORY\",\"$FILENAME\",\"$FILESIZE\",\"$FILETYPE\",$LASTUPDATE,$LASTUPDATEYEAR,\"$TAGS\" >> $DATA
+}
+
 
 #buat directory tujuan
 mkdir -p $DIRTUJUAN
 
+#buat data indexing
 DATA="$DIRTUJUAN/data.csv"
 if [ -f "$DATA" ]
 then
-	echo "$DATA found."
+	echo "$DATA is already exist."
 else
 	echo "author,category,directory,file_name,file_size,file_type,last_update,last_update_year,tags" > $DATA
 fi
@@ -35,16 +48,31 @@ echo "====[COPIYING FILE]=============================="
     LASTUPDATEYEAR="`stat -c %y $BERKAS | awk '{print $1}' | awk -F'-' '{print $1}'|  sort -u`"
     CATEGORY=""
     TAGS=""
-    # ARR_FILETYPE+=("$FILETYPE")
-    # ARR_LASTUPDATEYEAR+=("$LASTUPDATEYEAR")
 
     DIRECTORY="$DIRTUJUAN/$LASTUPDATEYEAR/$FILETYPE"
-    mkdir -p $DIRECTORY
-    cp -u -v $BERKAS $DIRECTORY
 
+		IFS=',' read -ra ARR_FILETYPE <<< "$ALLOWFILETYPE"
+		# ARR_FILETYPE=$ALLOWFILETYPE
+		ADA=${#ARR_FILETYPE[@]}
 
-    #buat data indexing
-    echo \"$AUTHOR\",\"$CATEGORY\",\"$DIRECTORY\",\"$FILENAME\",\"$FILESIZE\",\"$FILETYPE\",$LASTUPDATE,$LASTUPDATEYEAR,\"$TAGS\" >> $DATA
+		# echo $ADA
+
+		if [ "$ADA" -gt 0 ]
+		then
+			# echo "ada file_type dipilih"
+			for I in "${ARR_FILETYPE[@]}";
+			do
+					if [ "$FILETYPE" == "$I" ];
+					then
+						# echo "extensi sama: "$I
+						EXEC
+					fi
+			done
+		else
+			# echo "semua file_type dipilih"
+			EXEC
+		fi
+
   done
 
 dur=$(echo "$(date +%s.%N) - $start" | bc)
