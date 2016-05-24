@@ -10,10 +10,47 @@ start=$(date +%s.%N)
 
 
 function EXEC(){
-	mkdir -p $DIRECTORY
-	cp -u -v $BERKAS $DIRECTORY
-	#masukan data indexing
-	echo \"$AUTHOR\",\"$CATEGORY\",\"$DIRECTORY\",\"$FILENAME\",\"$FILESIZE\",\"$FILETYPE\",$LASTUPDATE,$LASTUPDATEYEAR,\"$TAGS\" >> $DATA
+	S=${#FILETYPE}
+	if [ $S -lt 5 ];
+	then
+		mkdir -p $DIRECTORY
+		cp -u -v $BERKAS $DIRECTORY
+		#masukan data indexing
+		echo \"$AUTHOR\",\"$CATEGORY\",\"$DIRECTORY\",\"$FILENAME\",\"$FILESIZE\",\"$FILETYPE\",$LASTUPDATE,$LASTUPDATEYEAR,\"$TAGS\" >> $DATA
+	fi
+}
+
+function LISTCATS(){
+	LIST=""
+	for I in $(cat category.txt);
+	do
+		SOURCE="$I"
+		if echo "$BERKAS" | grep -q "$SOURCE"; then
+			LIST+=$SOURCE","
+		fi
+	done
+
+	A=${#LIST}
+	if [ $A -gt 0 ];
+	then
+		echo ${LIST::-1}
+	fi
+}
+function LISTTAGS(){
+	LIST=""
+	for I in $(cat tags.txt);
+	do
+		SOURCE="$I"
+		if echo "$BERKAS" | grep -q "$SOURCE"; then
+			LIST+=$SOURCE","
+		fi
+	done
+
+	A=${#LIST}
+	if [ $A -gt 0 ];
+	then
+		echo ${LIST::-1}
+	fi
 }
 
 
@@ -46,16 +83,13 @@ echo "====[COPIYING FILE]=============================="
     FILETYPE="${BERKAS##*.}"
     LASTUPDATE="`stat -c %y $BERKAS | awk '{print $1}'`"
     LASTUPDATEYEAR="`stat -c %y $BERKAS | awk '{print $1}' | awk -F'-' '{print $1}'|  sort -u`"
-    CATEGORY=""
-    TAGS=""
+    CATEGORY=$(LISTCATS)
+    TAGS=$(LISTTAGS)
 
     DIRECTORY="$DIRTUJUAN/$LASTUPDATEYEAR/$FILETYPE"
 
 		IFS=',' read -ra ARR_FILETYPE <<< "$ALLOWFILETYPE"
-		# ARR_FILETYPE=$ALLOWFILETYPE
 		ADA=${#ARR_FILETYPE[@]}
-
-		# echo $ADA
 
 		if [ "$ADA" -gt 0 ]
 		then
