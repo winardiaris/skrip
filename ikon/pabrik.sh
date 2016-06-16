@@ -27,6 +27,7 @@ for x in 0 1 2 3 4 5 6
 do
   SAVEIF=$IFS
   IFS=$(echo -en "\n\b")
+  mkdir -p ../${size[x]}
   for file in $(ls *svg)
   do
     name=${file%%.svg}
