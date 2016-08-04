@@ -1,0 +1,10 @@
+#!/bin/bash
+export t="$1"
+
+pwd=$('pwd')
+echo "=================================="
+echo "$pwd"
+echo "Text yang dicari [$t]"
+echo "=================================="
+
+grep -rnw . -e "$t"
