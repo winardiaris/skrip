@@ -14,7 +14,7 @@ function EXEC(){
 	if [ $S -lt 5 ];
 	then
 		mkdir -p $DIRECTORY
-		cp -u -v $BERKAS $DIRECTORY
+		mv $BERKAS $DIRECTORY
 		#masukan data indexing
 		echo \"$AUTHOR\",\"$CATEGORY\",\"$DIRECTORY\",\"$FILENAME\",\"$FILESIZE\",\"$FILETYPE\",$LASTUPDATE,$LASTUPDATEYEAR,\"$TAGS\" >> $DATA
 	fi
